@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate a personal university student QR code for attendance.">
+  <meta name="theme-color" content="#17365d">
+  <title>Student QR Generator</title>
+  <link rel="icon" href="assets/ecu-logo.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+    <script src="js/config.js" defer></script>
+  <script src="js/localization.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/qr-generator.js" defer></script>
+  <script src="js/pdf-generator.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <img src="assets/ecu-logo.png" alt="Egyptian Chinese University" class="logo">
+      <div>
+        <div class="brand-title" data-i18n="brandTitle">Student QR Generator</div>
+        <div class="brand-subtitle" data-i18n="brandSubtitle">Personal QR card for attendance</div>
+        <div class="brand-owner">Dr. Mohamed Gresha • Faculty of Computer and Information Systems • Egyptian Chinese University</div>
+      </div>
+    </div>
+    <button id="languageToggle" class="language-btn" type="button">العربية</button>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-icon">QR</div>
+      <div>
+        <h1 data-i18n="title">Generate Your Student QR Code</h1>
+        <p data-i18n="subtitle">Enter your official university information and create your personal attendance QR code.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="formPanel">
+      <div class="section-heading">
+        <h2 data-i18n="studentInformation">Student Information</h2>
+        <span class="privacy-badge" data-i18n="localOnly">Generated locally</span>
+      </div>
+
+      <form id="studentForm" novalidate>
+        <div class="grid">
+          <div class="field">
+            <label for="university" data-i18n="university">University</label>
+            <select id="university" required></select>
+            <small class="error" id="universityError"></small>
+          </div>
+
+          <div class="field">
+            <label for="faculty" data-i18n="faculty">Faculty</label>
+            <select id="faculty" required disabled></select>
+            <small class="error" id="facultyError"></small>
+          </div>
+
+          <div class="field">
+            <label for="studentName" data-i18n="studentName">Student Name</label>
+            <input id="studentName" type="text" autocomplete="name" maxlength="120"
+                   placeholder="Enter your full name" data-i18n-placeholder="namePlaceholder" required>
+            <small class="error" id="studentNameError"></small>
+          </div>
+
+          <div class="field">
+            <label for="studentId" data-i18n="studentId">Student ID</label>
+            <input id="studentId" type="text" autocomplete="off" maxlength="40"
+                   placeholder="Enter your student ID" data-i18n-placeholder="idPlaceholder" required>
+            <small class="error" id="studentIdError"></small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary-btn" type="submit" id="generateBtn">
+            <span>▣</span> <span data-i18n="generate">Generate QR Code</span>
+          </button>
+          <button class="secondary-btn" type="button" id="clearBtn" data-i18n="clear">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel result-panel hidden" id="resultPanel">
+      <div class="success-message">
+        <span class="success-icon">✓</span>
+        <div>
+          <strong data-i18n="success">QR Code Generated Successfully</strong>
+          <div class="muted" data-i18n="keepSafe">Keep this QR card and present it when attendance is taken.</div>
+        </div>
+      </div>
+
+      <div class="student-card-wrap">
+        <div class="student-card" id="studentCard">
+          <div class="card-top">
+            <img src="assets/ecu-logo.png" alt="Egyptian Chinese University" class="card-logo">
+            <div class="card-institution">
+              <div class="card-university" id="cardUniversity"></div>
+              <div class="card-faculty" id="cardFaculty"></div>
+                          </div>
+          </div>
+
+          <div class="card-divider"></div>
+
+          <div class="card-body">
+            <div class="student-details">
+              <div class="detail-label" data-i18n="studentName">Student Name</div>
+              <div class="detail-value student-name-value" id="cardStudentName"></div>
+              <div class="detail-label id-label" data-i18n="studentId">Student ID</div>
+              <div class="detail-value" id="cardStudentId"></div>
+            </div>
+            <div class="qr-container" id="qrContainer" aria-label="Student QR Code"></div>
+          </div>
+
+          <div class="card-footer" data-i18n="attendanceCard">STUDENT ATTENDANCE CARD</div>
+        </div>
+      </div>
+
+      <div class="download-actions">
+        <button class="primary-btn" type="button" id="downloadPngBtn" data-i18n="downloadPng">Download PNG</button>
+        <button class="primary-btn" type="button" id="downloadPdfBtn" data-i18n="downloadPdf">Download PDF</button>
+        <button class="secondary-btn" type="button" id="printBtn" data-i18n="print">Print</button>
+        <button class="secondary-btn" type="button" id="generateAgainBtn" data-i18n="generateAgain">Generate Again</button>
+      </div>
+    </section>
+
+    <section class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">🔒</div>
+        <h3 data-i18n="privacyTitle">Your data stays on your device</h3>
+        <p data-i18n="privacyText">This page generates the QR code in your browser. Your student information is not submitted to a server.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📱</div>
+        <h3 data-i18n="offlineTitle">Offline QR generation</h3>
+        <p data-i18n="offlineText">After the page and its local libraries have loaded, QR generation does not need an online QR service.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">✓</div>
+        <h3 data-i18n="compatibleTitle">Attendance compatible</h3>
+        <p data-i18n="compatibleText">The QR payload follows the Student QR format used by the Android attendance application.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <img src="assets/ecu-logo.png" alt="Egyptian Chinese University" class="footer-logo">
+    <strong>Dr. Mohamed Gresha</strong>
+    <span>Faculty of Computer and Information Systems • Egyptian Chinese University</span>
+    <span data-i18n="footer">Student QR Generator • Static frontend application</span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
