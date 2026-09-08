@@ -130,3 +130,25 @@ The application first checks for local libraries. If they are not present, it au
 
 ## Branding
 Uses the supplied ECU logo and displays: Dr. Mohamed Gresha — Faculty of Computer and Information Systems — Egyptian Chinese University.
+
+
+## PNG Export
+The **Download Attendance Card (PNG)** button exports the complete **STUDENT ATTENDANCE CARD**, including:
+- ECU logo
+- University
+- Faculty
+- Student Name
+- Student ID
+- QR code
+- Attendance-card title
+- Dr. Mohamed Gresha / Faculty / University attribution
+
+It no longer downloads the QR code alone.
+
+
+## Canvas Export Fix
+The complete attendance-card PNG export is now **origin-clean**:
+- ECU logo is embedded directly in the JavaScript as a data URL.
+- QR is drawn directly from the generated QR canvas.
+- No cross-origin image is drawn onto the export canvas.
+This fixes the browser error: `Tainted canvases may not be exported`.
